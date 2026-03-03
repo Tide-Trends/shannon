@@ -1,73 +1,90 @@
-# Shannon Helper MCP (No API Keys)
+# Shannon Full MCP (Simple + No Claude/OpenAI Keys)
 
-A tiny local MCP server you can use in VS Code, Cursor, Claude Code, Antigravity, and OpenCode.
+Use Shannon as an MCP server so your AI tool can run full security scans from chat.
 
-No Anthropic/OpenAI/Gemini keys required.
+## What you get
 
-## What this gives you
+- Full Shannon controls as MCP tools:
+  - `shannon_start_scan`
+  - `shannon_query`
+  - `shannon_logs`
+  - `shannon_workspaces`
+  - `shannon_stop`
+- Local-model path using **Ollama** (no Anthropic/OpenAI/Gemini API keys)
 
-This MCP server exposes 2 local tools:
+> Defensive security only: only test systems you own or are explicitly authorized to test.
 
-- `save_deliverable` — saves Shannon-style deliverable files into `deliverables/`
-- `generate_totp` — generates 6-digit TOTP codes from a base32 secret
+## 60-second setup
 
-## Install (2 minutes)
+1. Install/start Ollama and pull a model:
 
-1) Clone this repo:
+```bash
+brew install ollama
+ollama serve
+ollama pull qwen2.5-coder:14b
+```
+
+2. Clone this repo and make the launcher executable:
 
 ```bash
 git clone https://github.com/Tide-Trends/shannon.git
 cd shannon
+chmod +x ./scripts/run-shannon-full-mcp.sh
 ```
 
-2) Make launcher executable:
-
-```bash
-chmod +x ./scripts/run-shannon-helper-mcp.sh
-```
-
-3) Point your MCP client to:
+3. In your AI client MCP config, set command to:
 
 ```text
-/absolute/path/to/shannon/scripts/run-shannon-helper-mcp.sh
+/absolute/path/to/shannon/scripts/run-shannon-full-mcp.sh
 ```
 
-4) Optional env var:
+4. Add env values:
 
 ```text
-SHANNON_TARGET_DIR=/absolute/path/to/your/project
+OLLAMA_LOCAL=true
+OLLAMA_MODEL=qwen2.5-coder:14b
+OLLAMA_BASE_URL=http://host.docker.internal:11434/v1/chat/completions
 ```
 
-If omitted, it uses the repo root.
+Ready templates are in `mcp-configs/`.
 
-## Client config templates
+## Copy/paste prompt for any AI tool
 
-Use and edit these templates:
+Use this exact prompt in VS Code/Cursor/Claude Code/Antigravity/OpenCode:
 
-- `mcp-configs/vscode.mcp.json`
-- `mcp-configs/cursor.mcp.json`
-- `mcp-configs/claude-code.mcp.json`
-- `mcp-configs/antigravity.mcp.json`
-- `mcp-configs/opencode.mcp.json`
+```text
+Set up Shannon Full MCP for this machine.
 
-## Quick proof it works
-
-From this repo:
-
-```bash
-cd mcp-server
-npm install
-npm run build
-node --input-type=module -e "import { Client } from '@modelcontextprotocol/sdk/client/index.js'; import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'; const t=new StdioClientTransport({command:'node',args:['./dist/stdio-server.js','--target-dir=' + process.cwd()],cwd:process.cwd()}); const c=new Client({name:'smoke',version:'1.0.0'},{capabilities:{}}); await c.connect(t); console.log((await c.listTools()).tools.map(x=>x.name)); await c.close();"
+1) Use MCP command: /absolute/path/to/shannon/scripts/run-shannon-full-mcp.sh
+2) Set env:
+   OLLAMA_LOCAL=true
+   OLLAMA_MODEL=qwen2.5-coder:14b
+   OLLAMA_BASE_URL=http://host.docker.internal:11434/v1/chat/completions
+3) Confirm the server exposes tools:
+   shannon_start_scan, shannon_query, shannon_logs, shannon_workspaces, shannon_stop
+4) Start a scan with shannon_start_scan against my authorized target.
 ```
 
-You should see:
+## Minimal usage
 
-- `save_deliverable`
-- `generate_totp`
+Start scan:
+
+- `shannon_start_scan` with:
+  - `url`: target URL
+  - `repo`: folder name under `./repos/`
+  - optional `workspace`, `config`, `output`
+  - optional `use_local_ollama=true`
+
+Monitor:
+
+- `shannon_logs`
+- `shannon_query`
+- `shannon_workspaces`
+
+Stop:
+
+- `shannon_stop` (or `clean=true`)
 
 ## Important note
 
-This repo originally contains the full Shannon pentest framework, and that full pipeline still uses cloud model credentials.
-
-This fork focuses on the **keyless local MCP helper server** only.
+This path removes Claude/OpenAI keys, but Shannon still needs a local LLM endpoint (Ollama) for reasoning.

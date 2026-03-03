@@ -4,11 +4,13 @@
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
-    "shannon-helper-mcp": "./dist/stdio-server.js"
+    "shannon-helper-mcp": "./dist/stdio-server.js",
+    "shannon-full-mcp": "./dist/full-stdio-server.js"
   },
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/stdio-server.js",
+    "start:full": "node ./dist/full-stdio-server.js",
     "clean": "rm -rf dist"
   },
   "dependencies": {

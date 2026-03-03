@@ -1,10 +1,12 @@
 {
   "mcpServers": {
-    "shannon-helper": {
-      "command": "/absolute/path/to/shannon/scripts/run-shannon-helper-mcp.sh",
+    "shannon-full": {
+      "command": "/absolute/path/to/shannon/scripts/run-shannon-full-mcp.sh",
       "args": [],
       "env": {
-        "SHANNON_TARGET_DIR": "/absolute/path/to/shannon"
+        "OLLAMA_LOCAL": "true",
+        "OLLAMA_MODEL": "qwen2.5-coder:14b",
+        "OLLAMA_BASE_URL": "http://host.docker.internal:11434/v1/chat/completions"
       }
     }
   }

@@ -180,14 +180,15 @@ cmd_start() {
         echo "       Download a key from the GCP Console (IAM > Service Accounts > Keys)"
         exit 1
       fi
-    elif [ "$ROUTER" = "true" ] && { [ -n "$OPENAI_API_KEY" ] || [ -n "$OPENROUTER_API_KEY" ]; }; then
+    elif [ "$ROUTER" = "true" ] && { [ -n "$OPENAI_API_KEY" ] || [ -n "$OPENROUTER_API_KEY" ] || [ "$OLLAMA_LOCAL" = "true" ]; }; then
       # Router mode with alternative provider - set a placeholder for SDK init
       export ANTHROPIC_API_KEY="router-mode"
     else
       echo "ERROR: Set ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN in .env"
       echo "       (or use CLAUDE_CODE_USE_BEDROCK=1 for AWS Bedrock,"
       echo "        CLAUDE_CODE_USE_VERTEX=1 for Google Vertex AI,"
-      echo "        or ROUTER=true with OPENAI_API_KEY or OPENROUTER_API_KEY)"
+      echo "        or ROUTER=true with OPENAI_API_KEY or OPENROUTER_API_KEY,"
+      echo "        or ROUTER=true OLLAMA_LOCAL=true for local Ollama)"
       exit 1
     fi
   fi
