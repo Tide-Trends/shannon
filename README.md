@@ -103,6 +103,10 @@ Shannon is available in two editions:
 
 ## 🚀 Setup & Usage Instructions
 
+> [!TIP]
+> Need a **local MCP server with no API keys** for editor agents (VS Code, Cursor, Claude Code, Antigravity, OpenCode)?
+> See [mcp-server/README.md](mcp-server/README.md) and ready-to-use templates in [mcp-configs/](mcp-configs/).
+
 ### Prerequisites
 
 - **Docker** - Container runtime ([Install Docker](https://docs.docker.com/get-docker/))

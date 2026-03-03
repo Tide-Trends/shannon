@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "shannon-helper": {
+      "type": "stdio",
+      "command": "/absolute/path/to/shannon/scripts/run-shannon-helper-mcp.sh",
+      "env": {
+        "SHANNON_TARGET_DIR": "/absolute/path/to/shannon"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "shannon-helper": {
+      "command": "/absolute/path/to/shannon/scripts/run-shannon-helper-mcp.sh",
+      "args": [],
+      "env": {
+        "SHANNON_TARGET_DIR": "/absolute/path/to/shannon"
+      }
+    }
+  }
+}
