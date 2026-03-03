@@ -1,21 +1,15 @@
-# Shannon Helper MCP Server (No API Keys)
+# Shannon Helper MCP (No-Key Setup)
 
-This folder now includes a **vendor-neutral stdio MCP server** that works locally and requires **no API keys**.
+This is a local stdio MCP server.
 
-## What this gives you
+No paid API keys needed.
 
-A local MCP server named `shannon-helper` with two tools:
+## Tools
 
-- `save_deliverable` - save validated Shannon deliverable files
-- `generate_totp` - generate 6-digit TOTP codes from a base32 secret
+- `save_deliverable`
+- `generate_totp`
 
-These tools are local utility tools only. They do not call Anthropic/OpenAI/Gemini and do not require paid credentials.
-
-## Important limitation
-
-The full Shannon autonomous pentesting pipeline still uses Anthropic Agent SDK model calls in the main app. This MCP server makes the helper tools portable across clients, but it does not make full end-to-end autonomous pentesting keyless.
-
-## Run locally
+## Run
 
 From repo root:
 
@@ -24,27 +18,29 @@ chmod +x ./scripts/run-shannon-helper-mcp.sh
 ./scripts/run-shannon-helper-mcp.sh
 ```
 
-Environment variable:
+Optional env:
 
-- `SHANNON_TARGET_DIR` (optional): base directory where `deliverables/` is written. Defaults to repo root.
-
-## Build-only path
-
-```bash
-cd mcp-server
-npm install
-npm run build
-node ./dist/stdio-server.js --target-dir=/absolute/path
+```text
+SHANNON_TARGET_DIR=/absolute/path/to/project
 ```
 
-## Client config templates
+## MCP client config
 
-Use examples in:
+Use command:
 
-- `mcp-configs/vscode.mcp.json`
-- `mcp-configs/cursor.mcp.json`
-- `mcp-configs/claude-code.mcp.json`
-- `mcp-configs/antigravity.mcp.json`
-- `mcp-configs/opencode.mcp.json`
+```text
+/absolute/path/to/shannon/scripts/run-shannon-helper-mcp.sh
+```
 
-Set the `command` path to this repository on your machine if it differs.
+Ready templates are in `mcp-configs/`.
+
+## One-line test
+
+```bash
+cd mcp-server && npm install && npm run build
+```
+
+Then run an MCP client and check it lists:
+
+- `save_deliverable`
+- `generate_totp`
