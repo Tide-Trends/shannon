@@ -1,90 +1,64 @@
-# Shannon Full MCP (Simple + No Claude/OpenAI Keys)
+# Shannon MCP (Use Your Current Chat Model)
 
-Use Shannon as an MCP server so your AI tool can run full security scans from chat.
+This setup is for VS Code / Cursor / Claude Code / Antigravity / OpenCode when you want:
 
-## What you get
+- no Anthropic/OpenAI API keys,
+- no local model runtime,
+- your **currently selected chat model** to do the reasoning.
 
-- Full Shannon controls as MCP tools:
-  - `shannon_start_scan`
-  - `shannon_query`
-  - `shannon_logs`
-  - `shannon_workspaces`
-  - `shannon_stop`
-- Local-model path using **Ollama** (no Anthropic/OpenAI/Gemini API keys)
+## Important truth (short version)
 
-> Defensive security only: only test systems you own or are explicitly authorized to test.
+The original full Shannon pipeline runs its own model backend, so it cannot directly inherit Cursor’s selected chat model from inside an external process.
 
-## 60-second setup
+This MCP setup gives your AI client Shannon tools (`save_deliverable`, `generate_totp`) and lets your **active chat model** drive the security workflow.
 
-1. Install/start Ollama and pull a model:
+## 1-minute install
 
-```bash
-brew install ollama
-ollama serve
-ollama pull qwen2.5-coder:14b
-```
-
-2. Clone this repo and make the launcher executable:
+1) Clone:
 
 ```bash
 git clone https://github.com/Tide-Trends/shannon.git
 cd shannon
-chmod +x ./scripts/run-shannon-full-mcp.sh
 ```
 
-3. In your AI client MCP config, set command to:
+2) Make launcher executable:
 
-```text
-/absolute/path/to/shannon/scripts/run-shannon-full-mcp.sh
+```bash
+chmod +x ./scripts/run-shannon-helper-mcp.sh
 ```
 
-4. Add env values:
+3) In your MCP config, set:
 
 ```text
-OLLAMA_LOCAL=true
-OLLAMA_MODEL=qwen2.5-coder:14b
-OLLAMA_BASE_URL=http://host.docker.internal:11434/v1/chat/completions
+command: /absolute/path/to/shannon/scripts/run-shannon-helper-mcp.sh
+env: SHANNON_TARGET_DIR=/absolute/path/to/target-project
 ```
 
 Ready templates are in `mcp-configs/`.
 
-## Copy/paste prompt for any AI tool
-
-Use this exact prompt in VS Code/Cursor/Claude Code/Antigravity/OpenCode:
+## Copy/paste prompt for Cursor (or any AI IDE)
 
 ```text
-Set up Shannon Full MCP for this machine.
+Use my CURRENT selected chat model. Do not call any external model APIs.
 
-1) Use MCP command: /absolute/path/to/shannon/scripts/run-shannon-full-mcp.sh
-2) Set env:
-   OLLAMA_LOCAL=true
-   OLLAMA_MODEL=qwen2.5-coder:14b
-   OLLAMA_BASE_URL=http://host.docker.internal:11434/v1/chat/completions
-3) Confirm the server exposes tools:
-   shannon_start_scan, shannon_query, shannon_logs, shannon_workspaces, shannon_stop
-4) Start a scan with shannon_start_scan against my authorized target.
+Use Shannon MCP tools only:
+- save_deliverable
+- generate_totp
+
+Target project path: /absolute/path/to/target-project
+URL under test: https://example.com
+
+Perform a defensive security assessment (authorized target only):
+1) Build recon notes and save with save_deliverable (RECON)
+2) Analyze top risks (auth/authz/xss/injection/ssrf)
+3) Save findings as Shannon deliverables via save_deliverable
+4) Provide remediation checklist with severity and fix priority
+
+Use my currently selected model for all reasoning.
 ```
 
-## Minimal usage
+## What changed
 
-Start scan:
-
-- `shannon_start_scan` with:
-  - `url`: target URL
-  - `repo`: folder name under `./repos/`
-  - optional `workspace`, `config`, `output`
-  - optional `use_local_ollama=true`
-
-Monitor:
-
-- `shannon_logs`
-- `shannon_query`
-- `shannon_workspaces`
-
-Stop:
-
-- `shannon_stop` (or `clean=true`)
-
-## Important note
-
-This path removes Claude/OpenAI keys, but Shannon still needs a local LLM endpoint (Ollama) for reasoning.
+- Templates now point to `run-shannon-helper-mcp.sh` (chat-model-native mode)
+- No local-model env vars required
+- No cloud API keys required for this MCP flow
